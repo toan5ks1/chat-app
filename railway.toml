@@ -8,5 +8,5 @@ restartPolicyMaxRetries = 10
 
 [[services]]
 name = "fastify"
-rootDirectory = "/fastify"
+rootDirectory = "fastify"
 
