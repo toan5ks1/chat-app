@@ -1,9 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
-import { Paperclip, User, Download, Eye, Play, CheckCheck, Check } from 'lucide-react';
-import type { Message, Participant } from '../../types/chat';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { Button } from '../ui/button';
-import { cn, formatTimestamp } from '../../lib/utils';
+import { useEffect, useRef, useState } from "react";
+import {
+  Paperclip,
+  User,
+  Download,
+  Play,
+  CheckCheck,
+  Check,
+} from "lucide-react";
+import type { Message, Participant } from "../../types/chat";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { cn, formatTimestamp } from "../../lib/utils";
 
 interface MessageListProps {
   messages: Message[];
@@ -13,14 +20,23 @@ interface MessageListProps {
   typingUsers?: string[];
 }
 
-export function MessageList({ messages, participants, currentUserId, isLoading, typingUsers = [] }: MessageListProps) {
+export function MessageList({
+  messages,
+  participants,
+  currentUserId,
+  isLoading,
+  typingUsers = [],
+}: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length, typingUsers.length]);
 
-  const getParticipant = (userId: string) => participants.find((participant) => participant.id === userId || participant._id === userId);
+  const getParticipant = (userId: string) =>
+    participants.find(
+      (participant) => participant.id === userId || participant._id === userId
+    );
 
   if (isLoading && messages.length === 0) {
     return (
@@ -41,24 +57,53 @@ export function MessageList({ messages, participants, currentUserId, isLoading, 
         const isSelf = message.senderId === currentUserId;
         const participant = getParticipant(message.senderId);
         return (
-          <div key={message.id} className={cn('flex items-end gap-3', isSelf ? 'flex-row-reverse text-right' : 'flex-row text-left')}>
+          <div
+            key={message.id}
+            className={cn(
+              "flex items-end gap-3",
+              isSelf ? "flex-row-reverse text-right" : "flex-row text-left"
+            )}
+          >
             <Avatar className="h-8 w-8">
-              <AvatarImage src={participant?.avatarUrl} alt={participant?.displayName} />
+              <AvatarImage
+                src={participant?.avatarUrl}
+                alt={participant?.displayName}
+              />
               <AvatarFallback>
-                {participant?.displayName?.[0]?.toUpperCase() || <User className="h-4 w-4" />}
+                {participant?.displayName?.[0]?.toUpperCase() || (
+                  <User className="h-4 w-4" />
+                )}
               </AvatarFallback>
             </Avatar>
-            <div className={cn('max-w-md space-y-2', isSelf ? 'text-right' : 'text-left')}>
-              {!isSelf && <p className="text-xs font-medium text-muted-foreground">{participant?.displayName}</p>}
+            <div
+              className={cn(
+                "max-w-md space-y-2",
+                isSelf ? "text-right" : "text-left"
+              )}
+            >
+              {!isSelf && (
+                <p className="text-xs font-medium text-muted-foreground">
+                  {participant?.displayName}
+                </p>
+              )}
               {message.content && (
-                <div className={cn('inline-block rounded-2xl border px-4 py-2 text-sm shadow-sm', isSelf ? 'rounded-br-md bg-primary text-primary-foreground' : 'rounded-bl-md bg-muted')}>
-                  <p className="whitespace-pre-line break-words">{message.content}</p>
+                <div
+                  className={cn(
+                    "inline-block rounded-2xl border px-4 py-2 text-sm shadow-sm",
+                    isSelf
+                      ? "rounded-br-md bg-primary text-primary-foreground"
+                      : "rounded-bl-md bg-muted"
+                  )}
+                >
+                  <p className="whitespace-pre-line break-words">
+                    {message.content}
+                  </p>
                 </div>
               )}
               {message.attachments?.length > 0 && (
                 <div className="space-y-2">
                   {message.attachments.map((attachment, index) => (
-                    <AttachmentPreview 
+                    <AttachmentPreview
                       key={`${attachment.url}-${index}`}
                       url={attachment.url}
                       name={attachment.name}
@@ -70,15 +115,21 @@ export function MessageList({ messages, participants, currentUserId, isLoading, 
                   ))}
                 </div>
               )}
-              <div className={cn('flex items-center gap-1 text-[10px]', isSelf ? 'justify-end text-muted-foreground' : 'justify-start text-muted-foreground')}>
+              <div
+                className={cn(
+                  "flex items-center gap-1 text-[10px]",
+                  isSelf
+                    ? "justify-end text-muted-foreground"
+                    : "justify-start text-muted-foreground"
+                )}
+              >
                 <span>{formatTimestamp(message.createdAt)}</span>
-                {isSelf && (
-                  message.read ? (
+                {isSelf &&
+                  (message.read ? (
                     <CheckCheck className="h-3 w-3 text-green-500" />
                   ) : (
                     <Check className="h-3 w-3" />
-                  )
-                )}
+                  ))}
               </div>
             </div>
           </div>
@@ -90,7 +141,9 @@ export function MessageList({ messages, participants, currentUserId, isLoading, 
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
           </span>
-          {typingUsers.length === 1 ? 'Someone is typing…' : 'Multiple people are typing…'}
+          {typingUsers.length === 1
+            ? "Someone is typing…"
+            : "Multiple people are typing…"}
         </div>
       )}
       <div ref={bottomRef} />
@@ -100,28 +153,44 @@ export function MessageList({ messages, participants, currentUserId, isLoading, 
 
 interface AttachmentPreviewProps {
   url: string;
-  type: 'image' | 'file' | 'audio' | 'video';
+  type: "image" | "file" | "audio" | "video";
   name: string;
   isSelf: boolean;
   allAttachments?: Array<{ url: string; type: string; name: string }>;
   currentIndex?: number;
 }
 
-function AttachmentPreview({ url, type, name, isSelf, allAttachments, currentIndex = 0 }: AttachmentPreviewProps) {
+function AttachmentPreview({
+  url,
+  type,
+  name,
+  isSelf,
+  allAttachments,
+  currentIndex = 0,
+}: AttachmentPreviewProps) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Group consecutive images for gallery view
-  const imageAttachments = allAttachments?.filter((a) => a.type === 'image') || [];
-  const isFirstImage = type === 'image' && currentIndex === allAttachments?.findIndex((a) => a.type === 'image');
-  const shouldShowGallery = type === 'image' && isFirstImage && imageAttachments.length > 1;
+  const imageAttachments =
+    allAttachments?.filter((a) => a.type === "image") || [];
+  const isFirstImage =
+    type === "image" &&
+    currentIndex === allAttachments?.findIndex((a) => a.type === "image");
+  const shouldShowGallery =
+    type === "image" && isFirstImage && imageAttachments.length > 1;
 
-  if (type === 'image') {
+  if (type === "image") {
     if (shouldShowGallery) {
       const displayImages = imageAttachments.slice(0, 4);
       const remainingCount = imageAttachments.length - 4;
 
       return (
-        <div className={cn('grid gap-1', imageAttachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2')}>
+        <div
+          className={cn(
+            "grid gap-1",
+            imageAttachments.length === 1 ? "grid-cols-1" : "grid-cols-2"
+          )}
+        >
           {displayImages.map((img, idx) => (
             <a
               key={`${img.url}-${idx}`}
@@ -133,7 +202,10 @@ function AttachmentPreview({ url, type, name, isSelf, allAttachments, currentInd
               <img
                 src={img.url}
                 alt={img.name}
-                className={cn('h-full w-full object-cover', imageAttachments.length === 1 ? 'max-h-80' : 'h-32')}
+                className={cn(
+                  "h-full w-full object-cover",
+                  imageAttachments.length === 1 ? "max-h-80" : "h-32"
+                )}
                 loading="lazy"
               />
               {idx === 3 && remainingCount > 0 && (
@@ -149,13 +221,23 @@ function AttachmentPreview({ url, type, name, isSelf, allAttachments, currentInd
       return null; // Skip rendering individual images after the gallery
     }
     return (
-      <a href={url} target="_blank" rel="noreferrer" className="block overflow-hidden rounded-lg">
-        <img src={url} alt={name} className="max-h-80 w-full object-cover" loading="lazy" />
+      <a
+        href={url}
+        target="_blank"
+        rel="noreferrer"
+        className="block overflow-hidden rounded-lg"
+      >
+        <img
+          src={url}
+          alt={name}
+          className="max-h-80 w-full object-cover"
+          loading="lazy"
+        />
       </a>
     );
   }
 
-  if (type === 'video') {
+  if (type === "video") {
     return (
       <div className="relative overflow-hidden rounded-lg bg-black">
         <video src={url} className="max-h-80 w-full" controls poster={url} />
@@ -166,9 +248,14 @@ function AttachmentPreview({ url, type, name, isSelf, allAttachments, currentInd
     );
   }
 
-  if (type === 'audio') {
+  if (type === "audio") {
     return (
-      <div className={cn('flex items-center gap-3 rounded-lg border px-4 py-3', isSelf ? 'bg-primary/10' : 'bg-muted')}>
+      <div
+        className={cn(
+          "flex items-center gap-3 rounded-lg border px-4 py-3",
+          isSelf ? "bg-primary/10" : "bg-muted"
+        )}
+      >
         <Button
           variant="ghost"
           size="icon"
@@ -195,7 +282,12 @@ function AttachmentPreview({ url, type, name, isSelf, allAttachments, currentInd
 
   // File type
   return (
-    <div className={cn('rounded-lg border p-3', isSelf ? 'bg-primary/10' : 'bg-muted')}>
+    <div
+      className={cn(
+        "rounded-lg border p-3",
+        isSelf ? "bg-primary/10" : "bg-muted"
+      )}
+    >
       <div className="mb-2 flex items-center gap-2">
         <div className="rounded-md bg-background p-2">
           <Paperclip className="h-5 w-5" />
