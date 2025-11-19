@@ -8,13 +8,16 @@ async function mongoosePlugin() {
   }
 
   try {
+    console.log('Attempting to connect to MongoDB...');
     await mongoose.connect(env.MONGODB_URI, {
       autoIndex: env.NODE_ENV !== 'production',
-      serverSelectionTimeoutMS: 10000, // Timeout after 10 seconds
+      serverSelectionTimeoutMS: 30000, // Increased timeout to 30 seconds for Railway
     });
+    console.log('MongoDB connected successfully');
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('MongoDB connection error:', errorMessage);
+    console.error('MONGODB_URI is set:', !!env.MONGODB_URI);
     throw new Error(`Failed to connect to MongoDB: ${errorMessage}`);
   }
 }

@@ -3,9 +3,7 @@ import cors from "@fastify/cors";
 import multipart from "@fastify/multipart";
 import jwt from "@fastify/jwt";
 import oauthPlugin from "@fastify/oauth2";
-import fastifyStatic from "@fastify/static";
 import sensible from "@fastify/sensible";
-import path from "path";
 import { env } from "./config/env";
 import mongoosePlugin from "./plugins/mongoose";
 import authRoutes from "./routes/authRoutes";
@@ -51,12 +49,6 @@ fastify.register(oauthPlugin, {
     auth: oauthPlugin.GOOGLE_CONFIGURATION,
   },
   callbackUri: env.GOOGLE_CALLBACK_URL,
-});
-
-fastify.register(fastifyStatic, {
-  root: path.join(process.cwd(), env.LOCAL_UPLOAD_DIR),
-  prefix: "/uploads/",
-  decorateReply: false,
 });
 
 fastify.register(mongoosePlugin);
