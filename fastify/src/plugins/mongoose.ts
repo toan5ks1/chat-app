@@ -14,7 +14,7 @@ export default fp(
       fastify.log.info(`MONGODB_URI is set: ${!!env.MONGODB_URI}`);
 
       await mongoose.connect(env.MONGODB_URI, {
-        autoIndex: env.NODE_ENV !== "production",
+        autoIndex: true,
         serverSelectionTimeoutMS: 30000,
         socketTimeoutMS: 45000,
       });

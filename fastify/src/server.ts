@@ -51,7 +51,7 @@ fastify.register(oauthPlugin, {
   callbackUri: env.GOOGLE_CALLBACK_URL,
 });
 
-fastify.register(mongoosePlugin);
+fastify.register(mongoosePlugin, { pluginTimeout: 20000 });
 fastify.register(authenticatePlugin);
 
 fastify.register(healthRoutes, { prefix: "/api" });
